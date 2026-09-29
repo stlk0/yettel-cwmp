@@ -1,5 +1,6 @@
 //! Keyboard navigation for each screen.
 use super::{Action, App, Screen};
+use crate::i18n;
 use crate::ui::form::{Field, ProfileForm};
 use crossterm::event::{KeyCode, KeyEvent, KeyEventKind, KeyModifiers};
 
@@ -14,14 +15,18 @@ impl App {
         {
             return Action::Quit;
         }
-        // Q remains an exit key on help and during a session; forms keep it as text.
-        if matches!(key.code, KeyCode::Char('q' | 'Q'))
-            && (self.help_open || !matches!(self.screen, Screen::Create | Screen::ChangeKey(_)))
+        // Q and L work on help and during a session; forms keep them as text.
+        let shortcut = (self.help_open
+            || !matches!(self.screen, Screen::Create | Screen::ChangeKey(_)))
             && !key
                 .modifiers
-                .intersects(KeyModifiers::CONTROL | KeyModifiers::ALT | KeyModifiers::SUPER)
-        {
+                .intersects(KeyModifiers::CONTROL | KeyModifiers::ALT | KeyModifiers::SUPER);
+        if shortcut && matches!(key.code, KeyCode::Char('q' | 'Q')) {
             return Action::Quit;
+        }
+        if shortcut && matches!(key.code, KeyCode::Char('l' | 'L')) {
+            i18n::toggle();
+            return Action::None;
         }
         if self.help_open {
             match key.code {

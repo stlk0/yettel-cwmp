@@ -1,12 +1,17 @@
-//! Embedded English and Serbian text selected once at startup.
+//! Embedded English and Serbian text, selected at startup and switchable with L.
 use crate::error::Error;
-use std::{collections::BTreeMap, sync::OnceLock};
+use std::{
+    collections::BTreeMap,
+    sync::{
+        OnceLock,
+        atomic::{AtomicBool, Ordering},
+    },
+};
 
 /// Supported interface languages.
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Language {
     /// English, also used before startup selects a language.
-    #[default]
     En,
     /// Serbian Latin.
     Sr,
@@ -23,17 +28,26 @@ const SOURCES: [&str; 2] = [
     include_str!("../locales/en.json"),
     include_str!("../locales/sr.json"),
 ];
-static LANGUAGE: OnceLock<Language> = OnceLock::new();
+static SERBIAN: AtomicBool = AtomicBool::new(false);
 static CATALOGS: OnceLock<[BTreeMap<String, String>; 2]> = OnceLock::new();
 
 /// Select the interface language before starting the terminal or worker threads.
 pub fn init(language: Language) {
-    let _ = LANGUAGE.set(language);
+    SERBIAN.store(language == Language::Sr, Ordering::Relaxed);
+}
+
+/// Switch between English and Serbian; the next frame renders in the other language.
+pub fn toggle() {
+    SERBIAN.fetch_xor(true, Ordering::Relaxed);
 }
 
 /// Return the selected language, or English before initialization.
 pub fn language() -> Language {
-    LANGUAGE.get().copied().unwrap_or_default()
+    if SERBIAN.load(Ordering::Relaxed) {
+        Language::Sr
+    } else {
+        Language::En
+    }
 }
 
 // Embedded catalogs are immutable and their JSON is checked by the tests below.

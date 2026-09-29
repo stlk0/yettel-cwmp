@@ -41,7 +41,7 @@ chmod +x ./yettel-cwmp
 
 The macOS app is unsigned and not notarized. When downloaded with a browser, macOS says it could not verify that the app is free of malware; use the install script instead, or verify the download and follow [Apple's per-app opening instructions](https://support.apple.com/en-au/102445). Do not override a warning that the app will damage your computer or contains malware.
 
-Use a terminal at least **52 columns × 16 rows**. Select English or Serbian Latin with `--lang en` or `--lang sr`; otherwise the system locale is used, with English as fallback. Set `NO_COLOR=1` before starting to disable colors. `--help` and `--version` also work without a terminal.
+Use a terminal at least **52 columns × 16 rows**. Select English or Serbian Latin with `--lang en` or `--lang sr`; otherwise the system locale is used, with English as fallback. Press **L** to switch languages on any screen except while typing in a form. Set `NO_COLOR=1` before starting to disable colors. `--help` and `--version` also work without a terminal.
 
 ## What you need
 
@@ -105,7 +105,7 @@ Yettel internet settings  |  ZTE H3600P
 │                                                                              │
 │                                                                              │
 └──────────────────────────────────────────────────────────────────────────────┘
-N Add  Q Quit  ? Help
+N Add  Q Quit  ? Help  L Srpski
 ```
 Received settings, hidden by default (synthetic loopback session):
 

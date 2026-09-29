@@ -7,6 +7,15 @@ All notable changes to this project are documented here. The format follows [Kee
 ### Added
 
 - An install script for macOS and Linux that downloads the latest release with curl, checks it against `SHA256SUMS`, installs it to `~/.local/bin` and starts it; macOS opens the unsigned app without a security prompt.
+- **L** switches between English and Serbian on every screen except while typing in a form.
+
+### Changed
+
+- The Wi-Fi key field also shows its router-label caption, WLAN Security.
+
+### Fixed
+
+- Form fields keep the end of a long value visible in Serbian, whose field labels are longer.
 
 ## [0.1.0] - 2026-09-29
 

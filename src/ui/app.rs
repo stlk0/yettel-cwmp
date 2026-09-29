@@ -228,6 +228,11 @@ impl App {
             footer.push_str("  ? ");
             footer.push_str(t("help.title"));
         }
+        // L works on every screen but forms; only the start screen has room to show it.
+        if matches!(self.screen, Screen::Profiles) {
+            footer.push_str("  L ");
+            footer.push_str(t("common.language"));
+        }
         footer
     }
     /// Display a classified error while preserving router context.

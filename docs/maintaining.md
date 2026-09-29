@@ -69,7 +69,7 @@ Use serial `SYN123456`, MAC `02:11:22:33:44:55`, and key `synthetic-wlan`. The s
 | Change key | K opens the editor; enter a replacement key and press Enter. After rotation, Esc cancels confirmation and Y replaces the saved credentials. |
 | Delete | D then Esc preserves records; D then Y removes the router's local directory. |
 
-Repeat with `--lang sr` at **52×16**, checking every title, action, warning and error. Repeat with `NO_COLOR=1`; check help, Esc, Q, Ctrl+C, and a resize below minimum. Capture only synthetic screens from the running app. For tmux clipboard checks, use `set -g set-clipboard on`.
+Repeat with `--lang sr` at **52×16**, checking every title, action, warning and error. Repeat with `NO_COLOR=1`; check help, Esc, Q, L, Ctrl+C, and a resize below minimum. Capture only synthetic screens from the running app. For tmux clipboard checks, use `set -g set-clipboard on`.
 
 Restart with `--scenario auth-rejected`, `http-500`, `incomplete`, `malformed`, `slow` and `pin-mismatch`. Expect ACS-AUTH, ACS-HTTP, ACS-INCOMPLETE, ACS-PROTOCOL, cancellation during slow receiving, and TLS-PIN with no HTTP sent. Errors always show stage and last RPC. Check key correction after rejection and ensure previous complete settings survive failed captures. `rotate-then-slow` exercises cancellation after management rotation.
 
@@ -99,7 +99,7 @@ The emulator leaves `WANIPConnection.3.ExternalIPAddress` empty because it does 
 
 ## Translations
 
-Edit `locales/en.json` and `locales/sr.json` together. Use flat dotted keys and complete phrases with matching `{name}` placeholders. Call `t()` or `tf()`; the language is selected once at startup from `--lang` or the system locale, defaulting to English.
+Edit `locales/en.json` and `locales/sr.json` together. Use flat dotted keys and complete phrases with matching `{name}` placeholders. Call `t()` or `tf()` while rendering; the language starts from `--lang` or the system locale, defaulting to English, and **L** switches it at runtime, so never keep translated text in app state.
 
 Tests compare key sets, placeholder sets, source references, unused keys and all `error.<code>` entries. Keep equivalent security guidance in both languages. Sanitize inserted untrusted values before rendering. Never move the development markers into locale JSON, since both catalogs are embedded in release builds. Obtain native Serbian proofreading and check narrow terminals.
 
