@@ -4,6 +4,8 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-09-29
+
 ### Added
 
 - An install script for macOS and Linux that downloads the latest release with curl, checks it against `SHA256SUMS`, installs it to `~/.local/bin` and starts it; macOS opens the unsigned app without a security prompt.
