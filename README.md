@@ -14,7 +14,7 @@ Get the internet (PPPoE) username and password for your own **Yettel / Cetin Ser
 curl -fsSL https://raw.githubusercontent.com/stlk0/yettel-cwmp/main/install.sh | sh
 ```
 
-The [install script](install.sh) picks your computer's archive, checks it against `SHA256SUMS`, and installs `yettel-cwmp` to `~/.local/bin` and its license notices to `~/.local/share/doc/yettel-cwmp`. Run it again to update; delete those two paths to uninstall. Downloaded this way, the unsigned macOS app opens without a security prompt.
+The [install script](install.sh) picks your computer's archive, checks it against `SHA256SUMS`, installs `yettel-cwmp` to `~/.local/bin` and its license notices to `~/.local/share/doc/yettel-cwmp`, then starts the app. Run it again to update; delete those two paths to uninstall. Downloaded this way, the unsigned macOS app opens without a security prompt.
 
 **Any computer:** open [Releases](https://github.com/stlk0/yettel-cwmp/releases/latest), choose your computer's archive, and extract all files. Replace `<version>` with the release version.
 
@@ -32,7 +32,7 @@ No administrator rights are needed. Downloads are unsigned; check their origin, 
 
 **Windows:** double-click `yettel-cwmp.exe` or run it in Windows Terminal. For an unrecognized-app warning, verify the download and follow [Microsoft's SmartScreen guidance](https://learn.microsoft.com/en-us/windows/apps/package-and-deploy/smartscreen-reputation). Managed-device policy may prevent execution; do not disable system-wide security.
 
-**macOS or Linux:** after the install script, run `~/.local/bin/yettel-cwmp`. From an extracted archive, open a terminal in its folder:
+**macOS or Linux:** the install script starts the app; later, run `~/.local/bin/yettel-cwmp`. From an extracted archive, open a terminal in its folder:
 
 ```sh
 chmod +x ./yettel-cwmp

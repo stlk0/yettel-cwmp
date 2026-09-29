@@ -1,5 +1,5 @@
 #!/bin/sh
-# Installs the latest yettel-cwmp release on macOS or Linux:
+# Installs the latest yettel-cwmp release on macOS or Linux and starts it:
 #
 #   curl -fsSL https://raw.githubusercontent.com/stlk0/yettel-cwmp/main/install.sh | sh
 #
@@ -57,6 +57,12 @@ main() {
     *":$bin_dir:"*) echo "Start it with: yettel-cwmp" ;;
     *) echo "Start it with: $bin_dir/yettel-cwmp" ;;
   esac
+
+  # With curl | sh this script arrives on stdin, so hand the app the terminal
+  # directly. Without one (CI, cron), only install.
+  if [ -t 1 ] && (: < /dev/tty) 2> /dev/null; then
+    "$bin_dir/yettel-cwmp" < /dev/tty
+  fi
 }
 
 main
