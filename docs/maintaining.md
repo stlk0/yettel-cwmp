@@ -113,13 +113,15 @@ Tests compare key sets, placeholder sets, source references, unused keys and all
 
 Five archives cover Linux x64/ARM64 (musl), Windows x64/ARM64 and universal macOS (x86_64 plus arm64). Each contains the executable, README.txt, LICENSE and THIRD_PARTY_LICENSES.html. Every target runs `--version`/`--help`; the universal binary's slices are checked with `lipo`.
 
+`install.sh` is served from `main` and installs the latest release on macOS and Linux, so a change reaches users without a release. It finds the archive by its `-<platform>.tar.gz` suffix in `SHA256SUMS` and expects the four files at the archive root; keep archive names and layout stable. Check changes with `shellcheck -s sh install.sh` and a run under `dash`.
+
 Use the workflow's pinned cargo-about to generate notices, then `python3 packaging/release.py verify-licenses THIRD_PARTY_LICENSES.html`. Notices cover normal dependencies across every release architecture. `packaging/release.py` verifies members, checksums, notes and absence of development markers. Preserve public-tag-only provenance and draft publication.
 
 ## Verify a download
 
 Compare `SHA256SUMS` with `sha256sum ARCHIVE` on Linux, `shasum -a 256 ARCHIVE` on macOS, or `Get-FileHash ARCHIVE -Algorithm SHA256` in PowerShell. Obtain the archive and checksums from the same release; matching hashes establish integrity, not independent trust in the publisher.
 
-With GitHub CLI, verify build provenance using `gh attestation verify ARCHIVE --repo stlk0/yettel-cwmp`. Binaries remain unsigned and macOS builds are not notarized; follow the README's per-app opening guidance.
+With GitHub CLI, verify build provenance using `gh attestation verify ARCHIVE --repo stlk0/yettel-cwmp`. The install script checks `SHA256SUMS` but not provenance. Binaries remain unsigned and macOS builds are not notarized; follow the README's per-app opening guidance.
 
 ## CI economy
 

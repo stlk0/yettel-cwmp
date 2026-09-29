@@ -8,7 +8,15 @@ Get the internet (PPPoE) username and password for your own **Yettel / Cetin Ser
 
 ## Download
 
-Open [Releases](https://github.com/stlk0/yettel-cwmp/releases/latest), choose your computer's archive, and extract all files. Replace `<version>` with the release version.
+**macOS or Linux:** install the latest release from a terminal:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/stlk0/yettel-cwmp/main/install.sh | sh
+```
+
+The [install script](install.sh) picks your computer's archive, checks it against `SHA256SUMS`, and installs `yettel-cwmp` to `~/.local/bin` and its license notices to `~/.local/share/doc/yettel-cwmp`. Run it again to update; delete those two paths to uninstall. Downloaded this way, the unsigned macOS app opens without a security prompt.
+
+**Any computer:** open [Releases](https://github.com/stlk0/yettel-cwmp/releases/latest), choose your computer's archive, and extract all files. Replace `<version>` with the release version.
 
 | Computer | Archive |
 |---|---|
@@ -18,20 +26,20 @@ Open [Releases](https://github.com/stlk0/yettel-cwmp/releases/latest), choose yo
 | Linux, Intel/AMD 64-bit | `yettel-cwmp-<version>-linux-x64.tar.gz` |
 | Linux, ARM 64-bit | `yettel-cwmp-<version>-linux-arm64.tar.gz` |
 
-No installation or administrator rights are needed. Downloads are unsigned; check their origin, `SHA256SUMS` and available build provenance using the [verification instructions](docs/maintaining.md#verify-a-download). Keep the included license notices with the executable.
+No administrator rights are needed. Downloads are unsigned; check their origin, `SHA256SUMS` and available build provenance using the [verification instructions](docs/maintaining.md#verify-a-download). Keep the included license notices with the executable.
 
 ## First run
 
 **Windows:** double-click `yettel-cwmp.exe` or run it in Windows Terminal. For an unrecognized-app warning, verify the download and follow [Microsoft's SmartScreen guidance](https://learn.microsoft.com/en-us/windows/apps/package-and-deploy/smartscreen-reputation). Managed-device policy may prevent execution; do not disable system-wide security.
 
-**macOS or Linux:** open a terminal in the extracted folder:
+**macOS or Linux:** after the install script, run `~/.local/bin/yettel-cwmp`. From an extracted archive, open a terminal in its folder:
 
 ```sh
 chmod +x ./yettel-cwmp
 ./yettel-cwmp
 ```
 
-The macOS app is unsigned and not notarized. For a verified download, follow [Apple's per-app opening instructions](https://support.apple.com/en-au/102445). Do not override a malware or damaged-file warning.
+The macOS app is unsigned and not notarized. When downloaded with a browser, macOS says it could not verify that the app is free of malware; use the install script instead, or verify the download and follow [Apple's per-app opening instructions](https://support.apple.com/en-au/102445). Do not override a warning that the app will damage your computer or contains malware.
 
 Use a terminal at least **52 columns × 16 rows**. Select English or Serbian Latin with `--lang en` or `--lang sr`; otherwise the system locale is used, with English as fallback. Set `NO_COLOR=1` before starting to disable colors. `--help` and `--version` also work without a terminal.
 
