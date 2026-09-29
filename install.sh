@@ -58,10 +58,11 @@ main() {
     *) echo "Start it with: $bin_dir/yettel-cwmp" ;;
   esac
 
-  # With curl | sh this script arrives on stdin, so hand the app the terminal
-  # directly. Without one (CI, cron), only install.
-  if [ -t 1 ] && (: < /dev/tty) 2> /dev/null; then
-    "$bin_dir/yettel-cwmp" < /dev/tty
+  # With curl | sh this script arrives on stdin, so give the app the terminal
+  # that stdout writes to. Not /dev/tty: macOS kqueue cannot poll it, and the
+  # app's input reader fails. Without a terminal (CI, cron), only install.
+  if [ -t 1 ]; then
+    "$bin_dir/yettel-cwmp" <&1
   fi
 }
 
