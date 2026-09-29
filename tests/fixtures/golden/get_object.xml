@@ -1,0 +1,75 @@
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:cwmp="urn:dslforum-org:cwmp-1-0"><SOAP-ENV:Header><cwmp:ID SOAP-ENV:mustUnderstand="1">synthetic-id</cwmp:ID>
+</SOAP-ENV:Header>
+<SOAP-ENV:Body><cwmp:GetParameterValuesResponse><ParameterList SOAP-ENC:arrayType="cwmp:ParameterValueStruct[23]"><ParameterValueStruct><Name>InternetGatewayDevice.DeviceInfo.AdditionalHardwareVersion</Name>
+<Value xsi:type="xsd:string"></Value>
+</ParameterValueStruct>
+<ParameterValueStruct><Name>InternetGatewayDevice.DeviceInfo.AdditionalSoftwareVersion</Name>
+<Value xsi:type="xsd:string"></Value>
+</ParameterValueStruct>
+<ParameterValueStruct><Name>InternetGatewayDevice.DeviceInfo.Description</Name>
+<Value xsi:type="xsd:string">ZTE H3600P V9.0</Value>
+</ParameterValueStruct>
+<ParameterValueStruct><Name>InternetGatewayDevice.DeviceInfo.DeviceLog</Name>
+<Value xsi:type="xsd:string"></Value>
+</ParameterValueStruct>
+<ParameterValueStruct><Name>InternetGatewayDevice.DeviceInfo.FirstUseDate</Name>
+<Value xsi:type="xsd:dateTime">0001-01-01T00:00:00Z</Value>
+</ParameterValueStruct>
+<ParameterValueStruct><Name>InternetGatewayDevice.DeviceInfo.HardwareVersion</Name>
+<Value xsi:type="xsd:string">V9.0.0</Value>
+</ParameterValueStruct>
+<ParameterValueStruct><Name>InternetGatewayDevice.DeviceInfo.Manufacturer</Name>
+<Value xsi:type="xsd:string">ZTE</Value>
+</ParameterValueStruct>
+<ParameterValueStruct><Name>InternetGatewayDevice.DeviceInfo.ManufacturerOUI</Name>
+<Value xsi:type="xsd:string">38165A</Value>
+</ParameterValueStruct>
+<ParameterValueStruct><Name>InternetGatewayDevice.DeviceInfo.ModelName</Name>
+<Value xsi:type="xsd:string">H3600P V9.0</Value>
+</ParameterValueStruct>
+<ParameterValueStruct><Name>InternetGatewayDevice.DeviceInfo.ModemFirmwareVersion</Name>
+<Value xsi:type="xsd:string"></Value>
+</ParameterValueStruct>
+<ParameterValueStruct><Name>InternetGatewayDevice.DeviceInfo.ProductClass</Name>
+<Value xsi:type="xsd:string">H3600P V9.0</Value>
+</ParameterValueStruct>
+<ParameterValueStruct><Name>InternetGatewayDevice.DeviceInfo.ProvisioningCode</Name>
+<Value xsi:type="xsd:string">H3600P V9.0</Value>
+</ParameterValueStruct>
+<ParameterValueStruct><Name>InternetGatewayDevice.DeviceInfo.SerialNumber</Name>
+<Value xsi:type="xsd:string">38165A-SYN123456</Value>
+</ParameterValueStruct>
+<ParameterValueStruct><Name>InternetGatewayDevice.DeviceInfo.SoftwareVersion</Name>
+<Value xsi:type="xsd:string">V9.0.0P1_PPF</Value>
+</ParameterValueStruct>
+<ParameterValueStruct><Name>InternetGatewayDevice.DeviceInfo.SpecVersion</Name>
+<Value xsi:type="xsd:string">9.0</Value>
+</ParameterValueStruct>
+<ParameterValueStruct><Name>InternetGatewayDevice.DeviceInfo.UpTime</Name>
+<Value xsi:type="xsd:unsignedInt">0</Value>
+</ParameterValueStruct>
+<ParameterValueStruct><Name>InternetGatewayDevice.DeviceInfo.X_ZTE-COM_ALMAC</Name>
+<Value xsi:type="xsd:string"></Value>
+</ParameterValueStruct>
+<ParameterValueStruct><Name>InternetGatewayDevice.DeviceInfo.X_ZTE-COM_IPv6Enabled</Name>
+<Value xsi:type="xsd:boolean">1</Value>
+</ParameterValueStruct>
+<ParameterValueStruct><Name>InternetGatewayDevice.DeviceInfo.X_ZTE-COM_Remotelog.Enable</Name>
+<Value xsi:type="xsd:boolean">0</Value>
+</ParameterValueStruct>
+<ParameterValueStruct><Name>InternetGatewayDevice.DeviceInfo.X_ZTE-COM_Remotelog.LogServer</Name>
+<Value xsi:type="xsd:string">0.0.0.0</Value>
+</ParameterValueStruct>
+<ParameterValueStruct><Name>InternetGatewayDevice.DeviceInfo.X_ZTE-COM_Securitylog.Enable</Name>
+<Value xsi:type="xsd:boolean">0</Value>
+</ParameterValueStruct>
+<ParameterValueStruct><Name>InternetGatewayDevice.DeviceInfo.X_ZTE-COM_Syslog.Enable</Name>
+<Value xsi:type="xsd:boolean">1</Value>
+</ParameterValueStruct>
+<ParameterValueStruct><Name>InternetGatewayDevice.DeviceInfo.X_ZTE-COM_Syslog.Level</Name>
+<Value xsi:type="xsd:string">3</Value>
+</ParameterValueStruct>
+</ParameterList>
+</cwmp:GetParameterValuesResponse>
+</SOAP-ENV:Body>
+</SOAP-ENV:Envelope>

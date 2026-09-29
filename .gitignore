@@ -1,0 +1,5 @@
+.private/
+/target/
+/artifacts/
+profile.json
+extracted-credentials.json

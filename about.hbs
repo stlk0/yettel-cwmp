@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>yettel-cwmp third party licenses</title>
+  <style>body { font: 1rem/1.5 system-ui, sans-serif; max-width: 60rem; margin: 2rem auto; padding: 0 1rem; } pre { white-space: pre-wrap; overflow-wrap: anywhere; }</style>
+</head>
+<body>
+  <h1>Third party licenses</h1>
+  <p>These notices cover the normal dependencies included across the Linux, Windows, and macOS release builds.</p>
+  {{#each licenses}}
+  <section>
+    <h2>{{name}}</h2>
+    <p>Used by:</p>
+    <ul>
+      {{#each used_by}}
+      <li>{{crate.name}} {{crate.version}}</li>
+      {{/each}}
+    </ul>
+    <pre>{{text}}</pre>
+  </section>
+  {{/each}}
+</body>
+</html>

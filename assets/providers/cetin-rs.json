@@ -1,0 +1,27 @@
+{
+ "id": "cetin-rs",
+ "display_name": "Yettel / Cetin Serbia",
+ "acs": {
+  "host": "acs.cetin.rs",
+  "port": 10302,
+  "path": "/acs/serbia"
+ },
+ "pins": [
+  {
+   "kind": "certificate_sha256",
+   "sha256": "b959c516bc61d835ab1600973525d71b7159dbc6afc9acdfec124f17b878f74c"
+  }
+ ],
+ "internet": {
+  "protocol": "PPPoE",
+  "vlan_id": 710,
+  "vlan_priority": 0,
+  "mtu": 1492
+ },
+ "iptv_reference": {
+  "vlan_id": 712,
+  "priority": 5,
+  "mtu": 1500,
+  "addressing": "DHCP"
+ }
+}

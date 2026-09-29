@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a security vulnerability privately
+    url: https://github.com/stlk0/yettel-cwmp/security/policy
+    about: Read the security policy before sharing sensitive details.

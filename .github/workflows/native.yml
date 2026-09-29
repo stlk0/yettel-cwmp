@@ -1,0 +1,95 @@
+name: Native
+
+# Native tests cover each OS family. Hosted runners are free for public
+# repositories, so there this runs on every pull request and main push. In a
+# private repository macOS minutes bill at 10x and Windows at 2x, so it runs
+# only when asked:
+#
+# - the `full-ci` pull request label (adding it starts a run; later pushes run
+#   again until it is removed),
+# - a manual run from the Actions tab (any branch),
+# - a version tag.
+#
+# The NATIVE_RUNNERS repository variable can move targets to self-hosted
+# runners in a private repository; see docs/maintaining.md.
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled]
+  push:
+    branches: [main]
+    tags: ['v*.*.*']
+  workflow_dispatch:
+
+# A newer run for the same ref replaces an older one. Events for other labels
+# get a group of their own so they never cancel a running test.
+concurrency:
+  group: native-${{ github.ref }}${{ github.event.action == 'labeled' && github.event.label.name != 'full-ci' && format('-{0}', github.run_id) || '' }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Test ${{ matrix.target }}
+    if: >-
+      (github.event.action != 'labeled' || github.event.label.name == 'full-ci') && (
+        !github.event.repository.private ||
+        github.event_name == 'workflow_dispatch' ||
+        github.ref_type == 'tag' ||
+        contains(github.event.pull_request.labels.*.name, 'full-ci'))
+    runs-on: ${{ github.event.repository.private && fromJSON(vars.NATIVE_RUNNERS || '{}')[matrix.target] || matrix.os }}
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            target: x86_64-unknown-linux-musl
+            executable: yettel-cwmp
+          - os: windows-2022
+            target: x86_64-pc-windows-msvc
+            executable: yettel-cwmp.exe
+          - os: macos-15
+            target: aarch64-apple-darwin
+            executable: yettel-cwmp
+    defaults:
+      run:
+        shell: bash
+    env:
+      CARGO_TERM_COLOR: always
+      MACOSX_DEPLOYMENT_TARGET: '11.0'
+      TARGET: ${{ matrix.target }}
+      EXECUTABLE: ${{ matrix.executable }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install musl compiler
+        if: contains(matrix.target, 'linux-musl')
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y musl-tools
+      - name: Install pinned Rust toolchain and target
+        run: |
+          rustup show
+          rustup target add "$TARGET"
+      - name: Test
+        run: cargo test --locked --target "$TARGET"
+      - name: Test with all features
+        run: cargo test --locked --all-features --target "$TARGET"
+      - name: Build release executable
+        run: cargo build --release --locked --target "$TARGET"
+      - name: Check executable
+        run: |
+          "./target/$TARGET/release/$EXECUTABLE" --version
+          "./target/$TARGET/release/$EXECUTABLE" --help
+      - name: Upload PR executable
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: yettel-cwmp-${{ matrix.target }}
+          path: target/${{ matrix.target }}/release/${{ matrix.executable }}
+          if-no-files-found: error
+          retention-days: 7

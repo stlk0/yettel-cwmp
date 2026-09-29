@@ -1,0 +1,43 @@
+name: Bug report
+description: Report a problem using synthetic reproduction steps.
+title: "Bug: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Never paste passwords, Wi-Fi keys, serial numbers or MAC addresses.**
+        Do not attach router labels, profile/export files or raw provider traffic.
+        For a security vulnerability, use the private security reporting link.
+  - type: input
+    id: os
+    attributes:
+      label: Operating system and terminal
+      placeholder: "For example: Windows 11, Windows Terminal"
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: App version
+      description: "Copy the output of yettel-cwmp --version."
+    validations:
+      required: true
+  - type: input
+    id: error_code
+    attributes:
+      label: Error code, if shown
+      placeholder: "For example: NET-TIMEOUT"
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Use synthetic values only; describe what you expected and what happened.
+    validations:
+      required: true
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Privacy check
+      options:
+        - label: I removed passwords, keys, serial numbers, MAC addresses and other private data.
+          required: true

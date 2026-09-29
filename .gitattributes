@@ -1,0 +1,2 @@
+# Golden wire fixtures must retain their exact CRLF bytes and blank HTTP header line.
+tests/fixtures/golden/* -text -whitespace

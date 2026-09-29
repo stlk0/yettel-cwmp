@@ -1,0 +1,26 @@
+accepted = [
+    "MIT",
+    "Apache-2.0",
+    "Apache-2.0 WITH LLVM-exception",
+    "BSD-3-Clause",
+    "ISC",
+    "MPL-2.0",
+    "Unicode-3.0",
+    "Zlib",
+]
+
+# One notice is shared by all five archives and covers the union of their
+# target-specific normal dependencies. Build and test crates are excluded.
+targets = [
+    "x86_64-unknown-linux-musl",
+    "aarch64-unknown-linux-musl",
+    "x86_64-pc-windows-msvc",
+    "aarch64-pc-windows-msvc",
+    "x86_64-apple-darwin",
+    "aarch64-apple-darwin",
+]
+ignore-build-dependencies = true
+ignore-dev-dependencies = true
+ignore-transitive-dependencies = false
+
+workarounds = ["ring", "rustls"]

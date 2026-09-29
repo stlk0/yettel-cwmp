@@ -1,0 +1,9 @@
+POST /synthetic?test=1 HTTP/1.1
+Host: localhost:12345
+Content-Type: text/xml; charset="utf-8"
+Connection: TE
+TE: trailers
+Content-Length: 0
+Authorization: Digest username="synthetic-user", realm="synthetic", nonce="nonce-1", uri="/synthetic?test=1", qop=auth, nc=00000002, cnonce="00112233445566778899aabbccddeeff", response="17ba9ed2a9266de011afd98f0da45321", opaque="opaque", algorithm=MD5
+Cookie: SID=synthetic-cookie
+

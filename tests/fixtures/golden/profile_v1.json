@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "serial": "SYN123456",
+  "router_mac": "02:11:22:33:44:55",
+  "acs_url": "https://localhost:12345/synthetic",
+  "username": "SYN123456",
+  "password": "synthetic-wlan"
+}

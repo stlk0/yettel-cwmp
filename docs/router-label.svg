@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="330" viewBox="0 0 720 330" role="img" aria-labelledby="title description">
+  <title id="title">Synthetic router label field guide</title>
+  <desc id="description">Illustrative ZXHN H3600P label with made-up values: S/N 38165A-SYN123456, MAC 02:11:22:33:44:55, WLAN SSID Synthetic-Network, WLAN Security synthetic-wlan. Use WLAN Security as the Wi-Fi key. WLAN SSID is the network name.</desc>
+  <rect width="720" height="330" rx="16" fill="#f4f6f8"/>
+  <rect x="18" y="18" width="684" height="294" rx="10" fill="#ffffff" stroke="#9aa5b1" stroke-width="2"/>
+  <g font-family="Arial, Helvetica, sans-serif" fill="#172b4d">
+    <text x="40" y="56" font-size="21" font-weight="700">ZXHN H3600P · example label</text>
+    <text x="40" y="81" font-size="14" fill="#526171">Made-up values · illustrative layout</text>
+    <path d="M40 101 H680" stroke="#d6dde5"/>
+    <g font-size="18">
+      <text x="40" y="137" font-weight="700">S/N</text>
+      <text x="236" y="137" font-family="monospace">38165A-SYN123456</text>
+      <text x="40" y="174" font-weight="700">MAC</text>
+      <text x="236" y="174" font-family="monospace">02:11:22:33:44:55</text>
+      <text x="40" y="211" font-weight="700">WLAN SSID</text>
+      <text x="236" y="211" font-family="monospace">Synthetic-Network</text>
+      <text x="40" y="248" font-weight="700">WLAN Security</text>
+      <text x="236" y="248" font-family="monospace">synthetic-wlan</text>
+    </g>
+    <text x="40" y="285" font-size="15" fill="#526171">Wi-Fi key: WLAN Security. Network name: WLAN SSID.</text>
+  </g>
+</svg>

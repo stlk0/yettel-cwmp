@@ -1,0 +1,1 @@
+Digest username="synthetic-user", realm="synthetic", nonce="legacy", uri="/synthetic?test=1", response="f8d7330529f1bc9e361d7869e7322048", opaque="opaque", algorithm=MD5

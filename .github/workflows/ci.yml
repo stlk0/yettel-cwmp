@@ -1,0 +1,75 @@
+name: CI
+
+# Routine checks stay on Linux: macOS minutes bill at
+# 10x and Windows at 2x in private repositories. Windows, macOS and musl code is
+# still linted here by cross-target Clippy; native tests live in native.yml.
+
+on:
+  push:
+    branches: [main]
+    paths-ignore: ['**.md', 'docs/**', 'LICENSE']
+  pull_request:
+    paths-ignore: ['**.md', 'docs/**', 'LICENSE']
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      CARGO_TERM_COLOR: always
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install pinned Rust toolchain
+        run: rustup show
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+      - name: Format
+        run: cargo fmt --check
+      - name: Clippy
+        run: cargo clippy --all-targets --locked -- -D warnings
+      - name: Clippy with all features
+        run: cargo clippy --all-targets --all-features --locked -- -D warnings
+      - name: Test
+        run: cargo test --locked
+      - name: Test with all features
+        run: cargo test --locked --all-features
+      - name: Install cross-compilers
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang gcc-mingw-w64-x86-64 musl-tools
+      - name: Clippy for Windows, macOS and musl
+        run: scripts/cross-clippy.sh
+      - name: Build default release executable
+        run: cargo build --release --locked
+      - name: Reject development override in release
+        shell: bash
+        run: |
+          binary=target/release/yettel-cwmp
+          if grep -aFq 'YETTEL_CWMP_DEV_PROVIDER' "$binary" || grep -aiFq 'dev build' "$binary" || grep -aFq 'RAZVOJNA VERZIJA' "$binary"; then
+            echo 'Development override is present in the release executable' >&2
+            exit 1
+          fi
+          size="$(wc -c < "$binary" | tr -d ' ')"
+          echo "Release executable size: $size bytes" >> "$GITHUB_STEP_SUMMARY"
+
+  deny:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: taiki-e/install-action@4cef1412cce204788f482e778a0b9187f9626a29 # v2.87.21
+        with:
+          tool: cargo-deny@0.20.2
+      - name: Audit dependencies
+        run: cargo deny check advisories licenses bans sources
