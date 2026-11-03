@@ -9,6 +9,7 @@ use pty::Pty;
 use std::{
     fs,
     io::Write,
+    num::NonZeroU16,
     os::fd::AsRawFd,
     path::PathBuf,
     process::{Child, Command, Stdio},
@@ -62,7 +63,11 @@ impl Terminal {
             child,
             pty,
             output: vec![],
-            parser: vt100::Parser::new(28, 100, 0),
+            parser: vt100::Parser::new(
+                NonZeroU16::new(28).unwrap(),
+                NonZeroU16::new(100).unwrap(),
+                0,
+            ),
             screens: vec![],
         };
         terminal.expect_since(0, "Yettel internet settings");
@@ -88,7 +93,11 @@ impl Terminal {
             child,
             pty,
             output: vec![],
-            parser: vt100::Parser::new(24, 80, 0),
+            parser: vt100::Parser::new(
+                NonZeroU16::new(24).unwrap(),
+                NonZeroU16::new(80).unwrap(),
+                0,
+            ),
             screens: vec![],
         };
         terminal.expect_since(0, "ST-OTHER");
@@ -178,7 +187,10 @@ impl Terminal {
     }
 
     fn resize(&mut self, rows: u16, columns: u16) {
-        self.parser.screen_mut().set_size(rows, columns);
+        self.parser.screen_mut().set_size(
+            NonZeroU16::new(rows).unwrap(),
+            NonZeroU16::new(columns).unwrap(),
+        );
         let size = libc::winsize {
             ws_row: rows,
             ws_col: columns,
