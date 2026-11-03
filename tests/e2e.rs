@@ -14,6 +14,7 @@ use std::{
     fs,
     io::Write,
     net::TcpListener,
+    num::NonZeroU16,
     process::{Child, Command, Stdio},
     thread,
     time::{Duration, Instant},
@@ -72,7 +73,11 @@ fn scenario(name: &str, expected: &str) {
             .unwrap(),
     );
     let mut bytes = vec![];
-    let mut screen = vt100::Parser::new(24, 80, 0);
+    let mut screen = vt100::Parser::new(
+        NonZeroU16::new(24).unwrap(),
+        NonZeroU16::new(80).unwrap(),
+        0,
+    );
     fn wait_for(
         pty: &mut Pty,
         bytes: &mut Vec<u8>,
