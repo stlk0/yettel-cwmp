@@ -148,13 +148,18 @@ fn authorized(head: &str, authorization: &str, last_nc: u32) -> Option<u32> {
         _ => return None,
     };
     let ha1 = format!(
-        "{:x}",
-        Md5::digest(format!("{username}:synthetic:{password}"))
+        "{:032x}",
+        u128::from_be_bytes(Md5::digest(format!("{username}:synthetic:{password}")).into())
     );
-    let ha2 = format!("{:x}", Md5::digest(b"POST:/synthetic"));
+    let ha2 = format!(
+        "{:032x}",
+        u128::from_be_bytes(Md5::digest(b"POST:/synthetic").into())
+    );
     let expected = format!(
-        "{:x}",
-        Md5::digest(format!("{ha1}:nonce-1:{nc_text}:{cnonce}:auth:{ha2}"))
+        "{:032x}",
+        u128::from_be_bytes(
+            Md5::digest(format!("{ha1}:nonce-1:{nc_text}:{cnonce}:auth:{ha2}")).into()
+        )
     );
     (value("response") == Some(expected.as_str())).then_some(nc)
 }
@@ -334,13 +339,18 @@ mod tests {
 
     fn header(username: &str, password: &str) -> String {
         let ha1 = format!(
-            "{:x}",
-            Md5::digest(format!("{username}:synthetic:{password}"))
+            "{:032x}",
+            u128::from_be_bytes(Md5::digest(format!("{username}:synthetic:{password}")).into())
         );
-        let ha2 = format!("{:x}", Md5::digest(b"POST:/synthetic"));
+        let ha2 = format!(
+            "{:032x}",
+            u128::from_be_bytes(Md5::digest(b"POST:/synthetic").into())
+        );
         let response = format!(
-            "{:x}",
-            Md5::digest(format!("{ha1}:nonce-1:00000001:abcdef:auth:{ha2}"))
+            "{:032x}",
+            u128::from_be_bytes(
+                Md5::digest(format!("{ha1}:nonce-1:00000001:abcdef:auth:{ha2}")).into()
+            )
         );
         format!(
             "Digest username=\"{username}\", realm=\"synthetic\", nonce=\"nonce-1\", uri=\"/synthetic\", qop=auth, nc=00000001, cnonce=\"abcdef\", response=\"{response}\", algorithm=MD5"

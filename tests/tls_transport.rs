@@ -289,13 +289,18 @@ fn digest_cookies_headers_reuse_and_chunk_trailers() {
     };
     let cnonce = field("cnonce");
     let ha1 = format!(
-        "{:x}",
-        Md5::digest(b"synthetic-user:synthetic:synthetic-password")
+        "{:032x}",
+        u128::from_be_bytes(Md5::digest(b"synthetic-user:synthetic:synthetic-password").into())
     );
-    let ha2 = format!("{:x}", Md5::digest(b"POST:/synthetic?test=1"));
+    let ha2 = format!(
+        "{:032x}",
+        u128::from_be_bytes(Md5::digest(b"POST:/synthetic?test=1").into())
+    );
     let expected = format!(
-        "{:x}",
-        Md5::digest(format!("{ha1}:nonce-1:00000001:{cnonce}:auth:{ha2}"))
+        "{:032x}",
+        u128::from_be_bytes(
+            Md5::digest(format!("{ha1}:nonce-1:00000001:{cnonce}:auth:{ha2}")).into()
+        )
     );
     assert_eq!(field("response"), expected);
 }

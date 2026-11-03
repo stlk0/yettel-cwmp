@@ -169,7 +169,10 @@ impl Challenge {
 }
 
 fn md5_hex(value: impl AsRef<[u8]>) -> String {
-    format!("{:x}", Md5::digest(value.as_ref()))
+    format!(
+        "{:032x}",
+        u128::from_be_bytes(Md5::digest(value.as_ref()).into())
+    )
 }
 
 fn quoted(value: &str) -> String {
@@ -263,5 +266,15 @@ impl Digest {
         }
         header.push_str(", algorithm=MD5");
         Ok(Some(header))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::md5_hex;
+
+    #[test]
+    fn md5_hex_preserves_leading_zeroes() {
+        assert_eq!(md5_hex(b"a"), "0cc175b9c0f1b6a831c399e269772661");
     }
 }
