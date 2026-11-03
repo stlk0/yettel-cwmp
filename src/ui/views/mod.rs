@@ -156,35 +156,18 @@ impl App {
                 explanation,
             );
         }
-        let serial = field_tail(
-            &safe(&self.form.serial),
-            fields.width.saturating_sub(17) as usize,
-        );
-        let mac = safe(&self.form.mac);
         let key = if self.form.reveal {
             safe(&self.form.key)
         } else {
             "•".repeat(self.form.key.chars().count().min(40))
         };
         let lines = if change {
-            vec![tf(
-                "form.key",
-                &[(
-                    "value",
-                    &field_tail(&key, fields.width.saturating_sub(13) as usize),
-                )],
-            )]
+            vec![field_line("form.key", &key, fields.width)]
         } else {
             vec![
-                tf("form.serial", &[("value", &serial)]),
-                tf("form.mac", &[("value", &mac)]),
-                tf(
-                    "form.key",
-                    &[(
-                        "value",
-                        &field_tail(&key, fields.width.saturating_sub(13) as usize),
-                    )],
-                ),
+                field_line("form.serial", &safe(&self.form.serial), fields.width),
+                field_line("form.mac", &safe(&self.form.mac), fields.width),
+                field_line("form.key", &key, fields.width),
             ]
         };
         let selected = if change {
@@ -293,6 +276,13 @@ impl App {
     }
 }
 
+/// Format a form field so the end of a long value stays visible after the translated label
+/// and the two-column selection marker.
+fn field_line(key: &str, value: &str, width: u16) -> String {
+    let label = Span::raw(tf(key, &[("value", "")])).width();
+    let room = (width as usize).saturating_sub(label + 2);
+    tf(key, &[("value", &field_tail(value, room))])
+}
 fn field_tail(value: &str, width: usize) -> String {
     if value.chars().count() <= width {
         return value.into();

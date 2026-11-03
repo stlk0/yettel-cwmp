@@ -69,7 +69,7 @@ Use serial `SYN123456`, MAC `02:11:22:33:44:55`, and key `synthetic-wlan`. The s
 | Change key | K opens the editor; enter a replacement key and press Enter. After rotation, Esc cancels confirmation and Y replaces the saved credentials. |
 | Delete | D then Esc preserves records; D then Y removes the router's local directory. |
 
-Repeat with `--lang sr` at **52×16**, checking every title, action, warning and error. Repeat with `NO_COLOR=1`; check help, Esc, Q, Ctrl+C, and a resize below minimum. Capture only synthetic screens from the running app. For tmux clipboard checks, use `set -g set-clipboard on`.
+Repeat with `--lang sr` at **52×16**, checking every title, action, warning and error. Repeat with `NO_COLOR=1`; check help, Esc, Q, L, Ctrl+C, and a resize below minimum. Capture only synthetic screens from the running app. For tmux clipboard checks, use `set -g set-clipboard on`.
 
 Restart with `--scenario auth-rejected`, `http-500`, `incomplete`, `malformed`, `slow` and `pin-mismatch`. Expect ACS-AUTH, ACS-HTTP, ACS-INCOMPLETE, ACS-PROTOCOL, cancellation during slow receiving, and TLS-PIN with no HTTP sent. Errors always show stage and last RPC. Check key correction after rejection and ensure previous complete settings survive failed captures. `rotate-then-slow` exercises cancellation after management rotation.
 
@@ -99,7 +99,7 @@ The emulator leaves `WANIPConnection.3.ExternalIPAddress` empty because it does 
 
 ## Translations
 
-Edit `locales/en.json` and `locales/sr.json` together. Use flat dotted keys and complete phrases with matching `{name}` placeholders. Call `t()` or `tf()`; the language is selected once at startup from `--lang` or the system locale, defaulting to English.
+Edit `locales/en.json` and `locales/sr.json` together. Use flat dotted keys and complete phrases with matching `{name}` placeholders. Call `t()` or `tf()` while rendering; the language starts from `--lang` or the system locale, defaulting to English, and **L** switches it at runtime, so never keep translated text in app state.
 
 Tests compare key sets, placeholder sets, source references, unused keys and all `error.<code>` entries. Keep equivalent security guidance in both languages. Sanitize inserted untrusted values before rendering. Never move the development markers into locale JSON, since both catalogs are embedded in release builds. Obtain native Serbian proofreading and check narrow terminals.
 
@@ -113,13 +113,15 @@ Tests compare key sets, placeholder sets, source references, unused keys and all
 
 Five archives cover Linux x64/ARM64 (musl), Windows x64/ARM64 and universal macOS (x86_64 plus arm64). Each contains the executable, README.txt, LICENSE and THIRD_PARTY_LICENSES.html. Every target runs `--version`/`--help`; the universal binary's slices are checked with `lipo`.
 
+`install.sh` is served from `main` and installs the latest release on macOS and Linux, so a change reaches users without a release. It finds the archive by its `-<platform>.tar.gz` suffix in `SHA256SUMS` and expects the four files at the archive root; keep archive names and layout stable. Check changes with `shellcheck -s sh install.sh` and a run under `dash`.
+
 Use the workflow's pinned cargo-about to generate notices, then `python3 packaging/release.py verify-licenses THIRD_PARTY_LICENSES.html`. Notices cover normal dependencies across every release architecture. `packaging/release.py` verifies members, checksums, notes and absence of development markers. Preserve public-tag-only provenance and draft publication.
 
 ## Verify a download
 
 Compare `SHA256SUMS` with `sha256sum ARCHIVE` on Linux, `shasum -a 256 ARCHIVE` on macOS, or `Get-FileHash ARCHIVE -Algorithm SHA256` in PowerShell. Obtain the archive and checksums from the same release; matching hashes establish integrity, not independent trust in the publisher.
 
-With GitHub CLI, verify build provenance using `gh attestation verify ARCHIVE --repo stlk0/yettel-cwmp`. Binaries remain unsigned and macOS builds are not notarized; follow the README's per-app opening guidance.
+With GitHub CLI, verify build provenance using `gh attestation verify ARCHIVE --repo stlk0/yettel-cwmp`. The install script checks `SHA256SUMS` but not provenance. Binaries remain unsigned and macOS builds are not notarized; follow the README's per-app opening guidance.
 
 ## CI economy
 

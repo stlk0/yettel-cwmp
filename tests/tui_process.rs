@@ -111,7 +111,8 @@ fn escape_never_quits_and_q_quits_outside_forms() {
     assert_eq!(app.key(key(KeyCode::Char('q'))), Action::Quit);
     app.show(Screen::Create);
     app.key(key(KeyCode::Char('q')));
-    assert_eq!(app.form.serial, "q");
+    app.key(key(KeyCode::Char('l')));
+    assert_eq!(app.form.serial, "ql");
 }
 #[test]
 fn defaults_and_shortcuts_follow_available_actions() {
@@ -139,7 +140,7 @@ fn form_mask_reveal_reset_and_cursor() {
     app.paste("synthetic-wifi-key");
     let hidden = rendered(&mut app);
     assert!(!hidden.contains("synthetic-wifi-key"));
-    assert!(hidden.contains("Wi-Fi key:"));
+    assert!(hidden.contains("Wi-Fi key (WLAN Security):"));
     app.key(KeyEvent::new(KeyCode::Char('r'), KeyModifiers::CONTROL));
     assert!(rendered(&mut app).contains("synthetic-wifi-key"));
     app.key(key(KeyCode::Esc));
@@ -245,6 +246,11 @@ fn narrow_form_keeps_end_of_long_serial_visible() {
     app.paste(&format!("38165A-{}TAIL1234", "A".repeat(56)));
     let screen = text(&render(&mut app, 52, 16));
     assert!(screen.contains("TAIL1234"), "{screen}");
+    app.form.field = Field::Key;
+    app.form.reveal = true;
+    app.paste(&format!("{}KEYTAIL9", "k".repeat(56)));
+    let screen = text(&render(&mut app, 52, 16));
+    assert!(screen.contains("KEYTAIL9"), "{screen}");
 }
 #[test]
 fn no_color_uses_terminal_defaults() {
@@ -337,6 +343,23 @@ fn non_tty_help_version_unknown_option_and_no_state() {
         );
     }
 }
+/// Rerun `test` alone in a child process, where it may change the process-wide language.
+/// Returns true in the child, which then runs the test body.
+fn in_own_process(test: &str) -> bool {
+    const PROBE: &str = "YETTEL_TEST_OWN_PROCESS";
+    if std::env::var_os(PROBE).is_some() {
+        return true;
+    }
+    let output = Command::new(std::env::current_exe().unwrap())
+        .args(["--exact", test])
+        .env(PROBE, "1")
+        .output()
+        .unwrap();
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    assert!(output.status.success(), "{stdout}");
+    assert!(stdout.contains("1 passed"), "{stdout}");
+    false
+}
 fn serbian_screen_expectations() -> Vec<(Screen, &'static [&'static str])> {
     let mut error = error_screen(Error::Dns);
     if let Screen::Error { progress, .. } = &mut error {
@@ -345,14 +368,14 @@ fn serbian_screen_expectations() -> Vec<(Screen, &'static [&'static str])> {
     vec![
         (
             Screen::Profiles,
-            &["Dobro došli", "Dodaj ruter (N)", "Izlaz (Q)"],
+            &["Dobro došli", "Dodaj ruter (N)", "Izlaz (Q)", "L English"],
         ),
         (
             Screen::Create,
             &[
                 "Dodaj ruter",
                 "Serijski broj:",
-                "Wi-Fi ključ:",
+                "Wi-Fi ključ (WLAN Security):",
                 "Tab/Up/Down Polje",
                 "Enter Dalje/Sačuvaj",
                 "Ctrl+U Obriši",
@@ -373,7 +396,7 @@ fn serbian_screen_expectations() -> Vec<(Screen, &'static [&'static str])> {
             Screen::ChangeKey(summary()),
             &[
                 "Promeni Wi-Fi ključ",
-                "Wi-Fi ključ:",
+                "Wi-Fi ključ (WLAN Security):",
                 "Ctrl+U Obriši",
                 "Esc Nazad",
             ],
@@ -431,21 +454,7 @@ fn serbian_screen_expectations() -> Vec<(Screen, &'static [&'static str])> {
 
 #[test]
 fn serbian_titles_and_available_menus_fit_minimum_window() {
-    const PROBE: &str = "YETTEL_TEST_SERBIAN_UI";
-    if std::env::var_os(PROBE).is_none() {
-        let output = Command::new(std::env::current_exe().unwrap())
-            .args([
-                "--exact",
-                "serbian_titles_and_available_menus_fit_minimum_window",
-            ])
-            .env(PROBE, "1")
-            .output()
-            .unwrap();
-        assert!(
-            output.status.success(),
-            "{}",
-            String::from_utf8_lossy(&output.stdout)
-        );
+    if !in_own_process("serbian_titles_and_available_menus_fit_minimum_window") {
         return;
     }
     i18n::init(Language::Sr);
@@ -486,4 +495,30 @@ fn serbian_titles_and_available_menus_fit_minimum_window() {
     let help = text(&render(&mut app, 52, 16));
     assert!(help.contains("Pomoć"));
     assert!(help.contains("Vaši podaci se čuvaju u:"));
+}
+#[test]
+fn l_switches_language_outside_forms() {
+    if !in_own_process("l_switches_language_outside_forms") {
+        return;
+    }
+    let mut app = app(vec![]);
+    assert!(text(&render(&mut app, 52, 16)).contains("L Srpski"));
+    app.key(key(KeyCode::Char('L')));
+    assert_eq!(i18n::language(), Language::Sr);
+    let serbian = text(&render(&mut app, 52, 16));
+    assert!(serbian.contains("Dobro došli"), "{serbian}");
+    assert!(serbian.contains("L English"), "{serbian}");
+    app.key(key(KeyCode::Char('?')));
+    app.key(key(KeyCode::Char('l')));
+    assert_eq!(i18n::language(), Language::En);
+    assert!(rendered(&mut app).contains("L: Srpski"));
+    app.key(key(KeyCode::Esc));
+    app.show(result_screen());
+    app.key(key(KeyCode::Char('l')));
+    assert_eq!(i18n::language(), Language::Sr);
+    assert!(matches!(app.screen, Screen::Result { .. }));
+    app.show(Screen::Create);
+    app.key(key(KeyCode::Char('l')));
+    assert_eq!(app.form.serial, "l");
+    assert_eq!(i18n::language(), Language::Sr);
 }
