@@ -187,6 +187,7 @@ impl Terminal {
     }
 
     fn resize(&mut self, rows: u16, columns: u16) {
+        let output_start = self.output.len();
         self.parser.screen_mut().set_size(
             NonZeroU16::new(rows).unwrap(),
             NonZeroU16::new(columns).unwrap(),
@@ -203,6 +204,23 @@ impl Terminal {
             0
         );
         self.signal(libc::SIGWINCH);
+
+        // Resizing the parser preserves old text; wait for the application to redraw.
+        let deadline = Instant::now() + WAIT;
+        loop {
+            self.read_available();
+            if self.output[output_start..]
+                .windows(b"\x1b[2J".len())
+                .any(|bytes| bytes == b"\x1b[2J")
+            {
+                break;
+            }
+            assert!(
+                self.child.try_wait().unwrap().is_none() && Instant::now() < deadline,
+                "terminal did not redraw after resize"
+            );
+            thread::sleep(Duration::from_millis(10));
+        }
     }
 
     fn signal(&self, signal: libc::c_int) {
